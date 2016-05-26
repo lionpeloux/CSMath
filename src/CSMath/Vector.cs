@@ -228,38 +228,29 @@ namespace CSMath
         /// <param name="axis">Axis of rotation.</param>
         /// <returns>True on success, false on failure.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Rotate(double angle, Vector axis)
+        public void Rotate(double angle, Vector axis)
         {
-            if (angle == 0.0 || axis.Length() == 0.0) { return false; }
-            else
-            {
-                axis.Normalize();
+            axis.Normalize();
 
-                double c = Math.Cos(angle);
-                double s = Math.Sin(angle);
+            double c = Math.Cos(angle);
+            double s = Math.Sin(angle);
 
-                double ax = (1 - c) * x * axis.x;
-                double ay = (1 - c) * y * axis.y;
-                double az = (1 - c) * z * axis.z;
+            double ax = (1 - c) * x * axis.x;
+            double ay = (1 - c) * y * axis.y;
+            double az = (1 - c) * z * axis.z;
 
-                double xtmp = x * c + ax * axis.x + ay * axis.x + az * axis.x + s * (axis.y * z - axis.z * y);
-                double ytmp = y * c + ax * axis.y + ay * axis.y + az * axis.y + s * (axis.z * x - axis.x * z);
-                double ztmp = z * c + ax * axis.z + ay * axis.z + az * axis.z + s * (axis.x * y - axis.y * x);
+            double xtmp = x * c + ax * axis.x + ay * axis.x + az * axis.x + s * (axis.y * z - axis.z * y);
+            double ytmp = y * c + ax * axis.y + ay * axis.y + az * axis.y + s * (axis.z * x - axis.x * z);
+            double ztmp = z * c + ax * axis.z + ay * axis.z + az * axis.z + s * (axis.x * y - axis.y * x);
 
                 
-                //double xtmp = x * c + (1 - c) * (x * axis.x * axis.x + y * axis.x * axis.y + z * axis.x * axis.z) + s * (axis.y * z - axis.z * y);
-                //double ytmp = y * c + (1 - c) * (x * axis.x * axis.y + y * axis.y * axis.y + z * axis.y * axis.z) + s * (axis.z * x - axis.x * z);
-                //double ztmp = z * c + (1 - c) * (x * axis.x * axis.z + y * axis.y * axis.z + z * axis.z * axis.z) + s * (axis.x * y - axis.y * x);
+            //double xtmp = x * c + (1 - c) * (x * axis.x * axis.x + y * axis.x * axis.y + z * axis.x * axis.z) + s * (axis.y * z - axis.z * y);
+            //double ytmp = y * c + (1 - c) * (x * axis.x * axis.y + y * axis.y * axis.y + z * axis.y * axis.z) + s * (axis.z * x - axis.x * z);
+            //double ztmp = z * c + (1 - c) * (x * axis.x * axis.z + y * axis.y * axis.z + z * axis.z * axis.z) + s * (axis.x * y - axis.y * x);
 
-                x = xtmp;
-                y = ytmp;
-                z = ztmp;
-
-                return true;
-            }
-            
-
-            
+            x = xtmp;
+            y = ytmp;
+            z = ztmp;            
         }
 
         /// <summary>

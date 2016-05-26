@@ -63,7 +63,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OpBench.cs" />
-    <Compile Include="TrigBench.cs" />
+    <Compile Include="TrigoBench.cs" />
     <Compile Include="RotationBench.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +71,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSMathTests\CSMathTests.csproj">
+      <Project>{6E883B31-5A0A-427A-BB81-6737479F266E}</Project>
+      <Name>CSMathTests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSMath\CSMath.csproj">
       <Project>{0beee158-1788-427e-bd53-d0a0e7aae33c}</Project>
       <Name>CSMath</Name>

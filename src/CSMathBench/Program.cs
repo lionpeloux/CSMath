@@ -3,6 +3,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using CSMath;
+using CSMathTests;
 using System;
 using SIMD = System.Numerics;
 
@@ -14,10 +15,18 @@ namespace CSMathBench
         {
             Console.WriteLine("IsHardwareAccelerated = " + SIMD.Vector.IsHardwareAccelerated);
 
-            var tb = new TrigBench();
-            tb.CheckResults(1000);
-            tb.CheckSin(1000);
-            var summary = BenchmarkRunner.Run<TrigBench>();
+            double err = Trigo.GetMaxError(Math.Sin, Trigo.FastSin);
+            Console.WriteLine("FastSin = " + string.Format("{0:E6}",err));
+            Trigo.PrintAllMaxError();
+
+            //double err_max = Trigo.GetMaxError(Math.Cos, Trigo.CosP20, -Math.PI/2, Math.PI/2, 10000);
+            //Console.WriteLine("err_tag = " + Trigo.CosP02_MaxErr);
+            //Console.WriteLine("err_max = " + err_max);
+            
+            Console.ReadKey();
+            //return;
+
+            var summary = BenchmarkRunner.Run<TrigoBench>();
             //Vector3d v = Vector3d.ZAxis;
             //v.Rotate(12, Vector3d.ZAxis);
             //var summary = BenchmarkRunner.Run<Md5VsSha256>();
@@ -31,7 +40,7 @@ namespace CSMathBench
 
 
             //var summary = BenchmarkRunner.Run<OpBench>();
-
+            Console.ReadKey();
 
         }
     }
@@ -108,10 +117,10 @@ namespace CSMathBench
         public Config()
         {
             Add(Job.Default
-                .WithLaunchCount(1)     // benchmark process will be launched only once
-                //.WithIterationTime(100) // 100ms per iteration
-                //.WithWarmupCount(5)     // 3 warmup iteration
-                //.WithTargetCount(5)     // 3 target iteration
+                .WithLaunchCount(3)     // benchmark process will be launched only once
+                .WithIterationTime(1000) // 100ms per iteration
+                .WithWarmupCount(5)     // 3 warmup iteration
+                .WithTargetCount(5)     // 3 target iteration
             );
         }
     }

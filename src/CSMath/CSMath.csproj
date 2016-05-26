@@ -45,6 +45,8 @@
     <Compile Include="Frame.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Trigo_sin.cs" />
+    <Compile Include="Trigo_cos.cs" />
     <Compile Include="Trigo.cs" />
     <Compile Include="Vector_static.cs" />
     <Compile Include="Vector.cs" />

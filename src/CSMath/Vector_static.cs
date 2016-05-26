@@ -551,27 +551,48 @@ namespace CSMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector Rotate(Vector v, double angle, Vector axis)
         {
-            if (angle == 0.0 || axis.Length() == 0.0)
-            {
-                return new Vector(v.x, v.y, v.z);
-            }
-            else
-            {
-                axis.Normalize();
+            axis.Normalize();
 
-                double c = Math.Cos(angle);
-                double s = Math.Sin(angle);
+            double c = Math.Cos(angle);
+            double s = Math.Sin(angle);
 
-                double ax = (1 - c) * v.x * axis.x;
-                double ay = (1 - c) * v.y * axis.y;
-                double az = (1 - c) * v.z * axis.z;
+            double ax = (1 - c) * v.x * axis.x;
+            double ay = (1 - c) * v.y * axis.y;
+            double az = (1 - c) * v.z * axis.z;
 
-                return new Vector(
-                    v.x * c + ax * axis.x + ay * axis.x + az * axis.x + s * (axis.y * v.z - axis.z * v.y),
-                    v.y * c + ax * axis.y + ay * axis.y + az * axis.y + s * (axis.z * v.x - axis.x * v.z),
-                    v.z * c + ax * axis.z + ay * axis.z + az * axis.z + s * (axis.x * v.y - axis.y * v.x)
-                    );
-            }
+            return new Vector(
+                v.x * c + ax * axis.x + ay * axis.x + az * axis.x + s * (axis.y * v.z - axis.z * v.y),
+                v.y * c + ax * axis.y + ay * axis.y + az * axis.y + s * (axis.z * v.x - axis.x * v.z),
+                v.z * c + ax * axis.z + ay * axis.z + az * axis.z + s * (axis.x * v.y - axis.y * v.x)
+                );
+            
+            //return new Vector(
+            //    v.x * c + (1 - c) * (v.x * axis.x * axis.x + v.y * axis.x * axis.y + v.z * axis.x * axis.z) + s * (axis.y * v.z - axis.z * v.y),
+            //    v.y * c + (1 - c) * (v.x * axis.x * axis.y + v.y * axis.y * axis.y + v.z * axis.y * axis.z) + s * (axis.z * v.x - axis.x * v.z),
+            //    v.z * c + (1 - c) * (v.x * axis.x * axis.z + v.y * axis.y * axis.z + v.z * axis.z * axis.z) + s * (axis.x * v.y - axis.y * v.x)
+            //    );
+        }
+
+        /// <summary>
+        /// Returns a vector rotated around a given axis.
+        /// </summary>
+        /// <param name="v">The source vector to rotate.</param>
+        /// <param name="angle">Angle of rotation (in radians).</param>
+        /// <param name="axis">Axis of rotation.</param>
+        /// <returns>The rotated vector.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector Rotate(Vector v, double sin, double cos, Vector axis)
+        {
+            // warning : axis must be of unit length
+            double ax = (1 - cos) * v.x * axis.x;
+            double ay = (1 - cos) * v.y * axis.y;
+            double az = (1 - cos) * v.z * axis.z;
+
+            return new Vector(
+                v.x * cos + ax * axis.x + ay * axis.x + az * axis.x + sin * (axis.y * v.z - axis.z * v.y),
+                v.y * cos + ax * axis.y + ay * axis.y + az * axis.y + sin * (axis.z * v.x - axis.x * v.z),
+                v.z * cos + ax * axis.z + ay * axis.z + az * axis.z + sin * (axis.x * v.y - axis.y * v.x)
+                );
 
             //return new Vector(
             //    v.x * c + (1 - c) * (v.x * axis.x * axis.x + v.y * axis.x * axis.y + v.z * axis.x * axis.z) + s * (axis.y * v.z - axis.z * v.y),
@@ -580,7 +601,7 @@ namespace CSMath
             //    );
         }
 
-       /// <summary>
+        /// <summary>
         /// Compute the oriented angle (α ≥ 0) between two vectors in [0,π].
         /// α is the rotation you need around v1 x v2 to align v1 with v2.
         /// </summary>
