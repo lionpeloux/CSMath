@@ -120,5 +120,35 @@ PI/8
         Rotate_2 | 71.6167 ns | 1.8352 ns |   0.85 |
         Rotate_3 | 78.9301 ns | 6.9116 ns |   0.93 |
 
-// ***** BenchmarkRunner: End *****
+
+
+         Method |     Median |    StdDev | Scaled |
+--------------- |----------- |---------- |------- |
+     DotNet_Sin | 25.0473 ns | 0.2751 ns |   1.00 |
+     DotNet_Cos | 31.4453 ns | 0.4217 ns |   1.26 |
+    DotNet_Asin | 10.9388 ns | 0.3017 ns |   0.44 |
+    DotNet_Acos | 11.5975 ns | 0.3138 ns |   0.46 |
+   DotNet_Floor |  0.9471 ns | 0.3531 ns |   0.04 |
+ PrincipalAngle |  4.1679 ns | 0.1167 ns |   0.17 |
+        AsinT21 | 11.8476 ns | 0.1454 ns |   0.47 |
+   AsinMM03_bis |  3.9942 ns | 0.2585 ns |   0.16 |
+   AsinMM04_bis |  3.8574 ns | 0.1192 ns |   0.15 |
+
+
+
+         Method |     Median |    StdDev | Scaled |
+--------------- |----------- |---------- |------- |
+     DotNet_Sin | 32.1213 ns | 0.8573 ns |   1.00 |
+     DotNet_Cos | 39.2179 ns | 0.9062 ns |   1.22 |
+    DotNet_Asin | 50.1977 ns | 3.4875 ns |   1.56 |
+    DotNet_Acos | 52.5896 ns | 3.3506 ns |   1.64 |
+     DotNet_Add |  0.0565 ns | 0.0711 ns |   0.00 |
+     DotNet_Mul |  0.0950 ns | 0.0830 ns |   0.00 |
+   DotNet_Floor |  1.1066 ns | 0.1192 ns |   0.03 |
+     DotNet_Abs |  0.0000 ns | 0.0591 ns |   0.00 |
+    DotNet_Sign |  1.3963 ns | 0.4021 ns |   0.04 |
+    DotNet_Sqrt |  3.6338 ns | 0.1472 ns |   0.11 |
+ PrincipalAngle |  4.2086 ns | 0.1392 ns |   0.13 |
+
+
 
