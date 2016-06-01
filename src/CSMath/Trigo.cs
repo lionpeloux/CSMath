@@ -300,22 +300,5 @@ namespace CSMath
 #endif
         }
 
-        public static double SinCos(double x)
-        {
-            // using a remez interpolation of sin over [-pi/2,pi/2]
-            double s1 = 1.0;
-            double s3 = -0.16607862421693137;
-            double s5 = 0.007633773374658546;
-            double x2 = x * x;
-            double sin = x * (s1 + x2 * (s3 + x2 * s5));
-
-            double s0 = 1.0;
-            double s2 = -0.5000000001004001;
-            double s4 = -0.1249997470619564;
-            double s6 = -0.06268108181407772;
-            double y2 = sin*sin;
-            double cos = s0 + y2 * (s2 + y2 * (s4 + y2 * (s4 + y2 * s6)));
-            return cos;     
-        }
     }
 }

@@ -121,7 +121,7 @@ namespace CSMath
         public void ReNormalize()
         {
 #if FAST
-            // TO DO
+            throw new NotImplementedException();
 #else       
            // normalize XAxis
             this.XAxis.Normalize();
