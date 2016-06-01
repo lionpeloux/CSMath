@@ -11,7 +11,9 @@ namespace CSMath
 
     public static partial class Trigo
     {
-        private static double bound = Math.PI / 2;
+        private const double PI_2 = Math.PI / 2;    // touch carrefully
+        private const double PI_64 = Math.PI / 64;  // touch carrefully
+
 
         /// <summary>
         /// Returns the maximum error found in the interval [bounds_inf, bounds_sup] between 2 trigonometric functions.
@@ -251,48 +253,69 @@ namespace CSMath
             return angle + 2 * k * Math.PI;
         }
 
+        /// <summary>
+        /// This methods gives a fast approximation of sin(x) assuming x is in [-pi/2;pi/2]
+        /// WARNING : if x is not in the recommended range the results are unreliable
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double FastSin(double x)
+        public static double Sin(double x)
         {
-            if (Math.Abs(x) < bound)
-            {
-                return SinT05(x); // max error over [-pi/2,pi/2] =  4,52E-003
-            }
-            else
-            {
-                return SinP07(PrincipalAngle(x)); // max error over [-pi,pi] =  6,65E-004
-            }
+#if FAST
+            // using a remez interpolation over [-pi/2,pi/2]
+            double s1 = 1.0;
+            double s3 = -0.16607862421693137;
+            double s5 = 0.007633773374658546;
+            double x2 = x * x;
+            return x * (s1 + x2 * (s3 + x2 * s5));
+#else
+            return Math.Sin(x);
+#endif
         }
 
+        /// <summary>
+        /// This method gives a fast approximation of sin(x) cos(x) assuming x is in [-pi/2;pi/2]
+        /// This method guaranty the trigonometric identity sin^2 + cos^2 = 1 in double precision.
+        /// Thus, this method must be used to compute fast rotation if x is in [-pi/2;pi/2].
+        /// NOTE : in [-pi/2;pi/2] x * sin(x) > 0 & cos(x) > 0
+        /// WARNING : if x is not in the recommended range the results are unreliable
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double FastCos(double x)
+        public static void SinCos(double x, out double sin, out double cos)
         {
-            if (Math.Abs(x) < bound)
-            {
-                return CosT06(x); // max error over [-pi/2,pi/2] =  8,95E-004
-            }
-            else
-            {
-                return CosP08(PrincipalAngle(x)); // max error over [-pi,pi] =  1,13E-004
-            }
+#if FAST
+            // using a remez interpolation of sin over [-pi/2,pi/2]
+            double s1 = 1.0;
+            double s3 = -0.16607862421693137;
+            double s5 = 0.007633773374658546;
+            double x2 = x * x;
+            sin = x * (s1 + x2 * (s3 + x2 * s5));
+            cos = Math.Sqrt(1 - sin * sin);
+#else
+            sin = Math.Sin(x);
+            cos = Math.Cos(x);
+#endif
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void FastSinCos(double x, out double sin, out double cos)
+        public static double SinCos(double x)
         {
-            if (Math.Abs(x) < bound)
-            {
-                sin = SinT05(x);
-                cos = CosT06(x);
-                //cos = Math.Sqrt(1 - (sin * sin)); // in [-pi/2,pi/2] cos is > 0
-            }
-            else
-            {
-                x = PrincipalAngle(x); // get the principal angle
-                sin = SinP07(x);
-                cos = CosP06(x);
-                //cos = - Math.Sqrt(1 - (sin * sin)); // in ]-pi,-pi/2[ U ]pi/2,pi] cos is < 0
-            }
+            // using a remez interpolation of sin over [-pi/2,pi/2]
+            double s1 = 1.0;
+            double s3 = -0.16607862421693137;
+            double s5 = 0.007633773374658546;
+            double x2 = x * x;
+            double sin = x * (s1 + x2 * (s3 + x2 * s5));
+
+            double s0 = 1.0;
+            double s2 = -0.5000000001004001;
+            double s4 = -0.1249997470619564;
+            double s6 = -0.06268108181407772;
+            double y2 = sin*sin;
+            double cos = s0 + y2 * (s2 + y2 * (s4 + y2 * (s4 + y2 * s6)));
+            return cos;     
         }
     }
 }
