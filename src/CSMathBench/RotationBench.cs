@@ -75,7 +75,7 @@ namespace CSMathBench
         [Benchmark(Baseline = false)]
         public bool RotateFrameFast()
         {
-            f.FastZRotate(alpha);
+            f.ZRotate(alpha);
             return true;
         }
 
@@ -87,8 +87,8 @@ namespace CSMathBench
             //double s, c;
             //Trigo.FastSinCos(alpha, out s, out c);
             //return Vector.LinearComb(c, v1, s, v2);
-            double c = Trigo.FastCos(alpha);
-            double s = Trigo.FastSin(alpha);
+            double s, c;
+            Trigo.SinCos(alpha, out s, out c);
             Vector y2 = Vector.LinearComb(-s, f.XAxis, c, f.YAxis);
             Vector x2 = Vector.LinearComb(c, v1, s, v2);
             f.XAxis = x2;
@@ -99,7 +99,7 @@ namespace CSMathBench
         [Benchmark(Baseline = false)]
         public Frame StatRotatePlaneFast()
         {
-            return Frame.FastZRotate(f, alpha);
+            return Frame.ZRotate(f, alpha);
         }
 
         //[Benchmark(Baseline = false)]

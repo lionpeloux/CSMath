@@ -19,7 +19,7 @@ namespace CSMathBench
 
         public TrigoBench()
         {
-            double val = Math.PI/8;
+            double val = Math.PI/64;
             Random rd = new Random();
             alpha = -val + 2 * val * rd.NextDouble();
             Console.WriteLine("alpha = PI / " + 1/(alpha / Math.PI));
@@ -33,54 +33,117 @@ namespace CSMathBench
         }
 
         [Benchmark(Baseline = false)]
-        public double DotNet_Cos()
+        public double Trigo_Sin()
         {
-            return Math.Cos(alpha);
+            return Trigo.Sin(alpha);
         }
 
+
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Cos()
+        //{
+        //    return Math.Cos(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_SinCos()
+        //{
+        //    double s = Math.Sin(alpha);
+        //    double c = Math.Cos(alpha);
+        //    return c;
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_SinCos_2()
+        //{
+        //    double s = Math.Sin(alpha);
+        //    double c = Math.Sqrt(1 - s * s);
+        //    return c;
+        //}
 
         [Benchmark(Baseline = false)]
-        public double DotNet_Asin()
+        public double Trigo_SinCos()
         {
-            return Math.Asin(alpha);
-        }
-
-        [Benchmark(Baseline = false)]
-        public double DotNet_Acos()
-        {
-            return Math.Acos(alpha);
+            double s, c;
+            Trigo.SinCos(alpha,out s, out c);
+            return c;
         }
 
 
-        [Benchmark(Baseline = false)]
-        public double DotNet_Floor()
-        {
-            return Math.Floor(alpha);
-        }
 
-        [Benchmark(Baseline = false)]
-        public double PrincipalAngle()
-        {
-            return Trigo.PrincipalAngle(alpha);
-        }
 
-        [Benchmark(Baseline = false)]
-        public double AsinT21()
-        {
-            return Trigo.AsinT21(alpha);
-        }
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Asin()
+        //{
+        //    return Math.Asin(alpha);
+        //}
 
-        [Benchmark(Baseline = false)]
-        public double AsinMM03_bis()
-        {
-            return Trigo.AsinMM03(alpha);
-        }
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Acos()
+        //{
+        //    return Math.Acos(alpha);
+        //}
 
-        [Benchmark(Baseline = false)]
-        public double AsinMM04_bis()
-        {
-            return Trigo.AsinMM04(alpha);
-        }
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Add()
+        //{
+        //    return alpha + alpha;
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Mul()
+        //{
+        //    return alpha*alpha;
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Floor()
+        //{
+        //    return Math.Floor(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Abs()
+        //{
+        //    return Math.Abs(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Sign()
+        //{
+        //    return Math.Sign(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double DotNet_Sqrt()
+        //{
+        //    return Math.Sqrt(Math.Abs(alpha));
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double PrincipalAngle()
+        //{
+        //    return Trigo.PrincipalAngle(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double AsinT21()
+        //{
+        //    return Trigo.AsinT21(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double AsinMM03_bis()
+        //{
+        //    return Trigo.AsinMM03(alpha);
+        //}
+
+        //[Benchmark(Baseline = false)]
+        //public double AsinMM04_bis()
+        //{
+        //    return Trigo.AsinMM04(alpha);
+        //}
 
 
 
@@ -119,7 +182,7 @@ namespace CSMathBench
         public TrigoBenchConfig()
         {
             Add(Job.Default
-                .WithLaunchCount(1)     // benchmark process will be launched only once
+                .WithLaunchCount(4)     // benchmark process will be launched only once
                 //.WithIterationTime(100) // 100ms per iteration
                 //.WithWarmupCount(5)     // 3 warmup iteration
                 //.WithTargetCount(5)     // 3 target iteration

@@ -13,16 +13,21 @@ namespace CSMathBench
     {
         static void Main(string[] args)
         {
+            Trigo.Sin(0.24);
+            double sin, cos;
+            Trigo.SinCos(0.24, out sin, out cos);
             Console.WriteLine("IsHardwareAccelerated = " + SIMD.Vector.IsHardwareAccelerated);
 
-            double err = Trigo.GetMaxError(Math.Sin, Trigo.FastSin);
-            Console.WriteLine("FastSin = " + string.Format("{0:E6}",err));
-            Trigo.PrintAllMaxError();
-
+            //double err = Trigo.GetMaxError(Math.Sin, Trigo.Sin);
+            //Console.WriteLine("FastSin = " + string.Format("{0:E6}",err));
+            //Trigo.PrintAllMaxError();
+#if FAST
+            Console.WriteLine("Super Fast");
+#endif
             //double err_max = Trigo.GetMaxError(Math.Cos, Trigo.CosP20, -Math.PI/2, Math.PI/2, 10000);
             //Console.WriteLine("err_tag = " + Trigo.CosP02_MaxErr);
             //Console.WriteLine("err_max = " + err_max);
-            
+
             Console.ReadKey();
             //return;
 

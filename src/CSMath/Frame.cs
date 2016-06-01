@@ -115,15 +115,42 @@ namespace CSMath
         #region INSTANCE METHODS
 
         /// <summary>
+        /// Re-normalized this frame in-place.
+        /// This ensure the frame is orthonormal assuming it was almost orthonormal before the call.
+        /// </summary>
+        public void ReNormalize()
+        {
+#if FAST
+            // TO DO
+#else       
+           // normalize XAxis
+            this.XAxis.Normalize();
+
+            // get a normalized ZAxis
+            Vector vz = this.ZAxis;
+            vz.Normalize();
+
+            // compute a new YAxis
+            this.YAxis = Vector.CrossProduct(vz, this.XAxis);
+#endif
+        }
+
+        /// <summary>
         /// Rotates this frame in place, off a given angle around its z-axis.
         /// </summary>
         /// <param name="angle">Angle of rotation (in radians).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ZRotate(double angle)
-        {         
+        {    
+#if FAST
+            // sin & cos computation
+            double s = Trigo.Sin(angle);
+            double c = Math.Sqrt(1-s*s); // ensure c^2 + s^2 = 1 and c > 0 over [-pi/2;pi/2]
+#else
             // sin & cos computation
             double c = Math.Cos(angle);
             double s = Math.Sin(angle);
+#endif
 
             // rotate XAxis and store the results in a tmp vector
             double vx = c * xaxis.X + s * yaxis.X;
@@ -142,25 +169,21 @@ namespace CSMath
         }
 
         /// <summary>
-        /// Fast Rotates this frame in place, off a given angle around its z-axis.
+        /// Rotates this frame in place, off a given tuple {sin(x), cos(x)} around its z-axis.
         /// </summary>
         /// <param name="angle">Angle of rotation (in radians).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void FastZRotate(double angle)
-        {         
-            // fast sin & cos computation
-            double s, c;
-            Trigo.FastSinCos(angle, out s, out c);
-
+        public void ZRotate(double sin, double cos)
+        {
             // rotate XAxis and store the results in a tmp vector
-            double vx = c * xaxis.X + s * yaxis.X;
-            double vy = c * xaxis.Y + s * yaxis.Y;
-            double vz = c * xaxis.Z + s * yaxis.Z;
+            double vx = cos * xaxis.X + sin * yaxis.X;
+            double vy = cos * xaxis.Y + sin * yaxis.Y;
+            double vz = cos * xaxis.Z + sin * yaxis.Z;
 
             // in-place rotation of YAxis
-            yaxis.X = -s * xaxis.X + c * yaxis.X;
-            yaxis.Y = -s * xaxis.Y + c * yaxis.Y;
-            yaxis.Z = -s * xaxis.Z + c * yaxis.Z;
+            yaxis.X = -sin * xaxis.X + cos * yaxis.X;
+            yaxis.Y = -sin * xaxis.Y + cos * yaxis.Y;
+            yaxis.Z = -sin * xaxis.Z + cos * yaxis.Z;
 
             // in-place rotation of XAyxis
             xaxis.X = vx;
@@ -205,21 +228,34 @@ namespace CSMath
         /// </summary>
         /// <param name="angle">Angle of rotation (in radians).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Frame FastZRotate(Frame f, double angle)
+        public static Frame ZRotate(Frame f, double angle)
         {
             // fast sin & cos computation
             double s, c;
-            Trigo.FastSinCos(angle, out s, out c);
+            Trigo.SinCos(angle, out s, out c);
 
             // rotate XAxis and store the results in a tmp vector
             Vector xaxis = Vector.LinearComb(c, f.XAxis, s, f.YAxis);
             Vector yaxis = Vector.LinearComb(-s, f.XAxis, c, f.YAxis);
-
             return new Frame(f.Origin, xaxis, yaxis);
         }
 
+        /// <summary>
+        /// Fast Rotates this frame in place, off a given tuple {sin(x), cos(x)} around its z-axis.
+        /// </summary>
+        /// <param name="angle">Angle of rotation (in radians).</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double TwistAngle(Frame f1, Frame f2)
+        public static Frame ZRotate(Frame f, double sin, double cos)
+        {
+            // rotate XAxis and store the results in a tmp vector
+            Vector xaxis = Vector.LinearComb(cos, f.XAxis, sin, f.YAxis);
+            Vector yaxis = Vector.LinearComb(-sin, f.XAxis, cos, f.YAxis);
+            return new Frame(f.Origin, xaxis, yaxis);
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double ZAngle(Frame f1, Frame f2)
         {
             return 0;
         }
@@ -234,7 +270,7 @@ namespace CSMath
             Vector axis = Vector.CrossProduct(vzref, vz);
 
             double c = Vector.DotProduct(vzref, vz); // |vzref| = |vz| = 1
-            double s = axis.Length(); // |vzref| = |vz| = 1 and alpha in [0,pi]
+            double s = axis.Length(); // |vzref| = |vz| = 1 and alpha in [0,pi] => s in [0,1]
 
             if (axis.Normalize()) // ensure |axis| = 1
             {

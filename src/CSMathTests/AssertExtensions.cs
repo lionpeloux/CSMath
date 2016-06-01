@@ -35,12 +35,12 @@ namespace CSMathTests
             Assert.AreEqual(expected.Z, actual.Z, epsilon, string.Format("delta_Z = {0:E3}", dz));
         }
 
-        public static void AreAlmostEqual(TrigoFunction expected, TrigoFunction actual, double epsilon = 1e-9)
+        public static void AreAlmostEqual(TrigoFunction expected, TrigoFunction actual, double bound = Math.PI / 2, double epsilon = 1e-9)
         {
             int N = 1000;
             for (int i = 0; i < N; i++)
             {
-                double angle = -Math.PI + 2 * Math.PI * i / (N - 1);
+                double angle = -bound + 2 * bound * i / (N - 1);
                 Assert.AreEqual(expected(angle), actual(angle), epsilon);
             }
         }
